@@ -43,7 +43,7 @@ class WeekNumberWidgetProvider : AppWidgetProvider() {
             // Get current week number
             val weekNumberUtils = WeekNumberUtils()
             val weekNumber = weekNumberUtils.getCurrentWeekNumber()
-            remoteViews.setTextViewText(R.id.widget_week_text, weekNumber.toString())
+//            remoteViews.setTextViewText(R.id.widget_week_text, weekNumber.toString())
 
             // Open the app when the widget is clicked
             val intent = Intent(context, MainActivity::class.java)
