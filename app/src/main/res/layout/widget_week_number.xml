@@ -20,10 +20,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/datefWeek"
+                android:id="@+id/dateOfWeek"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:text="Jun, 10"
+
                 android:textColor="@color/widget_bg_clr"
                 android:textSize="15sp" />
 
@@ -33,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:alpha="0.8"
                 android:paddingBottom="20dp"
-                android:text="Wednesday"
                 android:textColor="@color/widget_bg_clr"
                 android:textSize="12sp" />
 
@@ -42,7 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:alpha="0.9"
-                android:text="7:51 pm"
                 android:textColor="@color/widget_bg_clr"
                 android:textSize="12sp" />
 
@@ -77,12 +75,11 @@
 
                     <!--Week number-->
                     <TextView
-                        android:id="@+id/widget_week_text"
+                        android:id="@+id/widgetWeekNumber"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:paddingStart="5dp"
-                        android:text="8"
                         android:textColor="@color/widget_bg_clr"
                         android:textSize="50sp" />
 
