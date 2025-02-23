@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import com.android.weeknumber.MainActivity
 import com.android.weeknumber.R
+import com.android.weeknumber.Utils
 import com.android.weeknumber.ui.screen.weeknumber.WeekNumberUtils
 
 class WeekNumberWidgetProvider : AppWidgetProvider() {
@@ -25,7 +26,7 @@ class WeekNumberWidgetProvider : AppWidgetProvider() {
         }
 
 
-        WidgetUpdateScheduler.scheduleWidgetUpdate(context=context)
+        WidgetUpdateScheduler.scheduleWidgetUpdate(context = context)
 
     }
 
@@ -55,16 +56,24 @@ class WeekNumberWidgetProvider : AppWidgetProvider() {
 
             // Get current week number
             val weekNumberUtils = WeekNumberUtils()
+            val util = Utils()
             val weekNumber = weekNumberUtils.getCurrentWeekNumber()
 
             val currentDay = weekNumberUtils.getCurrentDay()
             val monthDate = weekNumberUtils.getCurrentMonthDate()
             val time = weekNumberUtils.getCurrentTime()
 
+
+            if (time.contains("12") && time.contains("am")) {
+                val motivation = util.giveRandomMotivation()
+                remoteViews.setTextViewText(R.id.motivationOfTheDay, motivation)
+            }
+
             remoteViews.setTextViewText(R.id.timeOfWeek, time)
             remoteViews.setTextViewText(R.id.dateOfWeek, monthDate)
             remoteViews.setTextViewText(R.id.dayOfWeek, currentDay)
             remoteViews.setTextViewText(R.id.widgetWeekNumber, weekNumber.toString())
+
 
             // Open the app when the widget is clicked
             val intent = Intent(context, MainActivity::class.java)
