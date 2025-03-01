@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -87,9 +88,31 @@ fun WeekNumberComposable() {
                 val weekNumberUtils = WeekNumberUtils()
                 val weekNumber = weekNumberUtils.getCurrentWeekNumber()
 
+                val util = Utils()
                 val day = weekNumberUtils.getCurrentDay()
                 val monthDate = weekNumberUtils.getCurrentMonthDate()
                 val time = weekNumberUtils.getCurrentTime()
+
+                val (today,tomorrow,upComingWeek) = util.getCalendarEvents(
+                    context =
+                    LocalContext.current
+                )
+//                Log.d("TAG", "WeekNumberComposable: getCalenderEvents=${getCalenderEvents.size}")
+//                for (event in getCalenderEvents) {
+//                    Log.d(
+//                        "EventsDescription",
+//                        "\n\n\n" +
+//                                " Event ID=${event.id}," +
+//                                " Event Title=${event.title}," +
+//                                " Event start time=${event.startTime}," +
+//                                " Event end time=${event.startTime}\n\n\n"
+//                    )
+//                }
+
+                Log.d("TAG", "WeekNumberComposable: today events = $today")
+                Log.d("TAG", "WeekNumberComposable: tomorrow events = $tomorrow")
+                Log.d("TAG", "WeekNumberComposable: upComingWeek events = $upComingWeek")
+
 
                 Log.d(
                     "TAG",
