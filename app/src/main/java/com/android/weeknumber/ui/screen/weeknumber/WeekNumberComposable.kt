@@ -35,10 +35,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.android.weeknumber.R
 import com.android.weeknumber.Utils
 import com.android.weeknumber.ui.theme.Ember
 import com.android.weeknumber.ui.theme.SecondaryEmber
+import com.android.weeknumber.vm.GetWeatherVM
 import kotlinx.coroutines.delay
 
 @Composable
@@ -47,12 +49,18 @@ fun WeekNumberComposable() {
     var animatedProgress by remember { mutableFloatStateOf(0f) }
     val targetProgress = remember { WeekNumberUtils().getCurrentWeekNumber() / 52f }
 
+    val getWeatherVM: GetWeatherVM = hiltViewModel()
+
     // Animate the progress
     LaunchedEffect(Unit) {
         for (progress in 0..(targetProgress * 100).toInt()) {
             animatedProgress = progress / 100f
             delay(10)
         }
+
+        // make weather api call
+        getWeatherVM.getWeather(lat = 24.860735, lon = 67.001137)
+
     }
 
 
@@ -93,7 +101,7 @@ fun WeekNumberComposable() {
                 val monthDate = weekNumberUtils.getCurrentMonthDate()
                 val time = weekNumberUtils.getCurrentTime()
 
-                val (today,tomorrow,upComingWeek) = util.getCalendarEvents(
+                val (today, tomorrow, upComingWeek) = util.getCalendarEvents(
                     context =
                     LocalContext.current
                 )

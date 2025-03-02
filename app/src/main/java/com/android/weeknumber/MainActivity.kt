@@ -21,7 +21,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.android.weeknumber.ui.screen.weeknumber.WeekNumberComposable
 import com.android.weeknumber.ui.theme.WeekNumberTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
