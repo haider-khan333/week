@@ -105,7 +105,7 @@ class WeekNumberWidgetProvider : AppWidgetProvider() {
                 if (hasEvents) View.GONE else View.VISIBLE
             )
 
-            remoteViews.setTextViewText(R.id.timeOfWeek, time)
+//            remoteViews.setTextViewText(R.id.timeOfWeek, time)
             remoteViews.setTextViewText(R.id.dateOfWeek, monthDate)
             remoteViews.setTextViewText(R.id.dayOfWeek, currentDay)
             remoteViews.setTextViewText(R.id.widgetWeekNumber, weekNumber.toString())
