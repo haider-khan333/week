@@ -49,6 +49,7 @@
 
         <!--    Design the layout for the week number/weather    -->
         <LinearLayout
+            android:id="@+id/week_weather_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
@@ -116,41 +117,59 @@
 
     </LinearLayout>
 
-    <!--    Motivation view-->
+    <!--    Events view -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="@drawable/datetime_bg"
         android:orientation="vertical">
+        <!--      image icon for refresh the events  -->
 
         <TextView
-            android:id="@+id/motivationOfTheDay"
+            android:id="@+id/noEventsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="10dp"
-            android:layout_gravity="center"
-            android:textAlignment="center"
-            android:textColor="@color/widget_bg_clr"
-            android:text="🧠 Mental Resilience – Life is tough, but you are tougher." />
+            android:text="No Events Today"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:visibility="gone" /> <!-- Initially hidden -->
+
+        <LinearLayout
+            android:id="@+id/eventDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:paddingEnd="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:paddingStart="10dp"
+                android:text="Today's Events 📅"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/refreshIcon"
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ripple_refresh"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_refresh" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/widget_event_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/datetime_bg"
+            android:visibility="visible"
+            android:scrollbars="none" />
     </LinearLayout>
 </LinearLayout>
-
-    <!--    <FrameLayout-->
-    <!--        android:layout_width="150dp"-->
-    <!--        android:layout_height="150dp"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:background="@drawable/widget_week_number_bg">-->
-
-    <!--        &lt;!&ndash; Week Number Text &ndash;&gt;-->
-    <!--        <TextView-->
-    <!--            android:id="@+id/widget_week_text"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_gravity="center"-->
-    <!--            android:textColor="@color/widget_bg_clr"-->
-    <!--            android:textSize="50sp" />-->
-    <!--    </FrameLayout>-->
