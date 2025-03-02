@@ -4,7 +4,12 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.CalendarContract
+import androidx.compose.ui.graphics.toArgb
+import com.android.weeknumber.ui.theme.E1
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class Utils {
     private val motivationsForMen = listOf(
@@ -54,76 +59,6 @@ class Utils {
         return motivationsForMen.random()
     }
 
-//    fun getCalendarEvents(contentResolver: ContentResolver): List<CalendarEvent> {
-//        val events = mutableListOf<CalendarEvent>()
-//
-//        // Define the columns to retrieve
-//        val projection = arrayOf(
-//            CalendarContract.Events._ID,
-//            CalendarContract.Events.TITLE,
-//            CalendarContract.Events.DESCRIPTION,
-//            CalendarContract.Events.DTSTART,
-//            CalendarContract.Events.DTEND,
-//            CalendarContract.Events.EVENT_LOCATION
-//        )
-//
-//        // Define the date range for the query
-//        val startOfDay = Calendar.getInstance().apply {
-//            set(Calendar.HOUR_OF_DAY, 0)
-//            set(Calendar.MINUTE, 0)
-//            set(Calendar.SECOND, 0)
-//            set(Calendar.MILLISECOND, 0)
-//        }.timeInMillis
-//
-//        val endOfDay = Calendar.getInstance().apply {
-//            set(Calendar.HOUR_OF_DAY, 23)
-//            set(Calendar.MINUTE, 59)
-//            set(Calendar.SECOND, 59)
-//            set(Calendar.MILLISECOND, 999)
-//        }.timeInMillis
-//
-//        // Define the selection criteria
-//        val selection =
-//            "${CalendarContract.Events.DTSTART} >= ? AND ${CalendarContract.Events.DTEND} <= ?"
-//        val selectionArgs = arrayOf(startOfDay.toString(), endOfDay.toString())
-//
-//        // Query the calendar events
-//        val cursor: Cursor? = contentResolver.query(
-//            CalendarContract.Events.CONTENT_URI,
-//            projection,
-//            selection,
-//            selectionArgs,
-//            null
-//        )
-//
-//        cursor?.use {
-//            while (it.moveToNext()) {
-//                val id = it.getLong(it.getColumnIndexOrThrow(CalendarContract.Events._ID))
-//                val title = it.getString(it.getColumnIndexOrThrow(CalendarContract.Events.TITLE))
-//                val description =
-//                    it.getString(it.getColumnIndexOrThrow(CalendarContract.Events.DESCRIPTION))
-//                val startTime =
-//                    it.getLong(it.getColumnIndexOrThrow(CalendarContract.Events.DTSTART))
-//                val endTime = it.getLong(it.getColumnIndexOrThrow(CalendarContract.Events.DTEND))
-//                val location =
-//                    it.getString(it.getColumnIndexOrThrow(CalendarContract.Events.EVENT_LOCATION))
-//
-//                events.add(CalendarEvent(id, title, description, startTime, endTime, location))
-//            }
-//        }
-//
-//        return events
-//    }
-//
-//    data class CalendarEvent(
-//        val id: Long,
-//        val title: String,
-//        val description: String,
-//        val startTime: Long,
-//        val endTime: Long,
-//        val location: String
-//    )
-
     fun getCalendarEvents(context: Context): Triple<List<CalendarEvent>, List<CalendarEvent>, List<CalendarEvent>> {
         val todayEvents = mutableListOf<CalendarEvent>()
         val tomorrowEvents = mutableListOf<CalendarEvent>()
@@ -163,7 +98,9 @@ class Utils {
             CalendarContract.Events._ID,
             CalendarContract.Events.TITLE,
             CalendarContract.Events.DTSTART,
-            CalendarContract.Events.DTEND
+            CalendarContract.Events.DTEND,
+            CalendarContract.Events.EVENT_COLOR, // Fetch event color
+            CalendarContract.Events.CALENDAR_ID  // Fetch calendar ID for default colors
         )
 
         // Fetch events from today onwards
@@ -182,19 +119,36 @@ class Utils {
         cursor?.use {
             while (it.moveToNext()) {
                 val id = it.getLong(0)
-                val title = it.getString(1)?.trim() ?:"Untitled Event"
+                val title = it.getString(1)?.trim() ?: "Untitled Event"
                 val startDate = it.getLong(2)
                 val endDate = it.getLong(3)
+                val eventColor = it.getInt(4) // Get event-specific color
+                val calendarId = it.getLong(5) // Calendar ID for default colors
+
+                val color = if (eventColor != 0) eventColor else getCalendarDefaultColor(
+                    context,
+                    calendarId
+                )
+
+                val event = CalendarEvent(id, title, startDate, endDate, color)
+
 
                 when (startDate) {
-                    in todayStart..todayEnd -> todayEvents.add(CalendarEvent(id, title, startDate, endDate))
-                    in tomorrowStart..tomorrowEnd -> tomorrowEvents.add(CalendarEvent(id, title, startDate, endDate))
-                    in tomorrowEnd..weekEnd -> upcomingWeekEvents.add(CalendarEvent(id, title, startDate, endDate))
+                    in todayStart..todayEnd -> todayEvents.add(
+                        event
+                    )
+
+                    in tomorrowStart..tomorrowEnd -> tomorrowEvents.add(
+                        event
+                    )
+
+                    in tomorrowEnd..weekEnd -> upcomingWeekEvents.add(
+                        event
+                    )
                 }
             }
         }
 
-//        return Triple(todayEvents, tomorrowEvents, upcomingWeekEvents)
         return Triple(
             todayEvents.distinctBy { it.title to it.startTime },
             tomorrowEvents.distinctBy { it.title to it.startTime },
@@ -202,11 +156,35 @@ class Utils {
         )
     }
 
+    private fun getCalendarDefaultColor(context: Context, calendarId: Long): Int {
+        val uri = CalendarContract.Calendars.CONTENT_URI
+        val projection = arrayOf(CalendarContract.Calendars.CALENDAR_COLOR)
+        val selection = "${CalendarContract.Calendars._ID} = ?"
+        val selectionArgs = arrayOf(calendarId.toString())
+
+        val cursor: Cursor? = context.contentResolver.query(
+            uri,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                return it.getInt(0) // Return the default calendar color
+            }
+        }
+        return E1.toArgb() // Return black if no color found
+    }
+
+
     // Data class for storing event details
     data class CalendarEvent(
         val id: Long,
         val title: String,
         val startTime: Long,
-        val endTime: Long
+        val endTime: Long,
+        val color: Int? = null
     )
 }
