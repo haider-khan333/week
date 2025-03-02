@@ -1,10 +1,13 @@
 package com.android.weeknumber.service
 
 import android.content.Context
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.compose.ui.graphics.toArgb
 import com.android.weeknumber.R
 import com.android.weeknumber.Utils
+import com.android.weeknumber.ui.theme.E1
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,20 +26,39 @@ class EventListFactory(private val context: Context) : RemoteViewsService.Remote
 
     override fun onDestroy() {}
 
-    override fun getCount(): Int = eventList.first.size
+    override fun getCount(): Int {
+        return if (eventList.first.isEmpty()) 1 else eventList.first.size
+    }
 
     override fun getViewAt(position: Int): RemoteViews {
-        val event = eventList.first[position]
         val rv = RemoteViews(context.packageName, R.layout.event_component)
 
-        rv.setTextViewText(R.id.eventTime, formatEventTime(event.startTime, event.endTime))
-        rv.setTextViewText(R.id.eventTitle, event.title)
 
-        // set the event color
-        event.color?.let {
-            rv.setInt(R.id.eventColor, "setBackgroundColor", it)
+        if (eventList.first.isNotEmpty()) {
+            val event = eventList.first[position]
+            rv.setTextViewText(R.id.eventTime, formatEventTime(event.startTime, event.endTime))
+            rv.setTextViewText(R.id.eventTitle, event.title)
+
+            // Show event details
+            rv.setViewVisibility(R.id.eventTime, View.VISIBLE)
+            rv.setViewVisibility(R.id.eventTitle, View.VISIBLE)
+            rv.setViewVisibility(R.id.noEventsText, View.GONE) // Hide "No Events Found"
+
+            // set the event color
+            event.color?.let {
+                rv.setInt(R.id.eventColor, "setBackgroundColor", it)
+            }
+
+
+        } else {
+            rv.setViewVisibility(R.id.eventTime, View.GONE)
+            rv.setViewVisibility(R.id.eventTitle, View.GONE)
+            rv.setViewVisibility(R.id.noEventsText, View.VISIBLE)
+
+            // set the event color
+            rv.setInt(R.id.eventColor, "setBackgroundColor", E1.toArgb())
+
         }
-
 
         return rv
     }

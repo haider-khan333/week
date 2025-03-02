@@ -33,7 +33,8 @@
                 android:layout_marginTop="2dp"
                 android:layout_weight="1"
                 android:text="10:30 am - 12:45 pm"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:visibility="visible" />
 
 
             <TextView
@@ -45,7 +46,21 @@
                 android:alpha="0.85"
                 android:text="GYM"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/noEventsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="No events found"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
