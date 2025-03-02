@@ -77,46 +77,22 @@ class WeekNumberWidgetProvider : AppWidgetProvider() {
 
             // Get current week number
             val weekNumberUtils = WeekNumberUtils()
-            val util = Utils()
-            val eventList = util.getCalendarEvents(context = context)
-            val hasEvents = eventList.first.isNotEmpty()
             val weekNumber = weekNumberUtils.getCurrentWeekNumber()
-
             val currentDay = weekNumberUtils.getCurrentDay()
             val monthDate = weekNumberUtils.getCurrentMonthDate()
-            val time = weekNumberUtils.getCurrentTime()
 
 
-            // set the visibility of the text nad refresh button
-            remoteViews.setViewVisibility(
-                R.id.eventDetails,
-                if (hasEvents) View.VISIBLE else View.GONE
-            )
-
-            // show/hide the list view
-            remoteViews.setViewVisibility(
-                R.id.widget_event_list,
-                if (hasEvents) View.VISIBLE else View.GONE
-            )
-
-            // show/hide the "No events today" text
-            remoteViews.setViewVisibility(
-                R.id.noEventsText,
-                if (hasEvents) View.GONE else View.VISIBLE
-            )
-
-//            remoteViews.setTextViewText(R.id.timeOfWeek, time)
             remoteViews.setTextViewText(R.id.dateOfWeek, monthDate)
             remoteViews.setTextViewText(R.id.dayOfWeek, currentDay)
             remoteViews.setTextViewText(R.id.widgetWeekNumber, weekNumber.toString())
 
 
             // Set up ListView to display dynamic events
-            if (hasEvents) {
-                val intent = Intent(context, EventListService::class.java)
-                remoteViews.setRemoteAdapter(R.id.widget_event_list, intent)
-                remoteViews.setEmptyView(R.id.widget_event_list, R.id.noEventsText)
-            }
+
+            val intent = Intent(context, EventListService::class.java)
+            remoteViews.setRemoteAdapter(R.id.widget_event_list, intent)
+            remoteViews.setEmptyView(R.id.widget_event_list, R.id.noEventsText)
+
 
             // 🔄 Set up Refresh Button Click
             val refreshIntent = Intent(context, WeekNumberWidgetProvider::class.java).apply {
