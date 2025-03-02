@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    // di injections
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -56,4 +60,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // di injections dependencies
+    implementation(libs.hilt.android)
+    // kapt compiler for android
+    kapt(libs.hilt.android.compiler)
+    // kapt compiler for androidx
+    kapt(libs.androidx.hilt.compiler)
+    // For ViewModel injection with Hilt
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // retrofit dependencies
+    implementation(libs.square.retrofit)
+    implementation(libs.square.retrofit.converter.gson)
+    implementation(libs.okhttp)
 }
