@@ -1,22 +1,11 @@
 package com.android.weeknumber
 
-import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.graphics.Rect
-import android.graphics.RectF
 import android.provider.CalendarContract
 import androidx.compose.ui.graphics.toArgb
 import com.android.weeknumber.ui.theme.E1
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 class Utils {
     private val motivationsForMen = listOf(
@@ -64,23 +53,6 @@ class Utils {
 
     fun giveRandomMotivation(): String {
         return motivationsForMen.random()
-    }
-
-    fun getRoundedCornerBitmap(bitmap: Bitmap, cornerRadius: Float): Bitmap {
-        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(output)
-
-        val paint = Paint()
-        val rect = Rect(0, 0, bitmap.width, bitmap.height)
-        val rectF = RectF(rect)
-
-        paint.isAntiAlias = true
-        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
-
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(bitmap, rect, rect, paint)
-
-        return output
     }
 
     fun getCalendarEvents(context: Context): Triple<List<CalendarEvent>, List<CalendarEvent>, List<CalendarEvent>> {
